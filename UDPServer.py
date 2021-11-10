@@ -12,7 +12,8 @@ while True:
     modifiedMessage = messageReceived.upper()
     serverSocket.sendto(modifiedMessage.encode(), clientAddress)
     print("The message has been modified and sent back to the client")
-    serverSocket.close()
-    print("The server is closed")
-    break
+    if messageReceived == "exit":
+        serverSocket.close()
+        print("The server is closed")
+        break
 
