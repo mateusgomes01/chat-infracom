@@ -1,19 +1,46 @@
+#!/usr/bin/env python
+
 from socket import *
+import sys
+import select
 
-serverPort = 12000
-serverSocket = socket(AF_INET, SOCK_DGRAM)
-serverSocket.bind(('', serverPort))
-while True:
+host="0.0.0.0"
+port = 9999
+s = socket(AF_INET,SOCK_DGRAM)
+s.bind((host,port))
 
-    print("The server is ready to receive")
-    message, clientAddress = serverSocket.recvfrom(2048)
-    messageReceived = message.decode()
-    print("Message received from client: " + messageReceived)
-    modifiedMessage = messageReceived.upper()
-    serverSocket.sendto(modifiedMessage.encode(), clientAddress)
-    print("The message has been modified and sent back to the client")
-    if messageReceived == "exit":
-        serverSocket.close()
-        print("The server is closed")
-        break
+addr = (host,port)
+buf=1024
 
+# receives filename before receiving file
+data,addr = s.recvfrom(buf)
+filename = data.decode()
+
+# creates a new file to write upcomming contents
+f = open(filename,'w+b')
+data,addr = s.recvfrom(buf)
+
+# receives file contents
+while(data.decode() != 'EOF'):
+    f.write(data)
+    data,addr = s.recvfrom(buf)
+
+# creates new file name to send back to client
+filename_client = 'copy_of_'+filename
+s.sendto(filename_client.encode(),addr)
+print("sending file name...")
+
+f.seek(0) # moves pointer to beginning of file
+
+# sends file back to client with new name
+data = f.read(buf)
+while(data):
+    if(s.sendto(data,addr)):
+        print("sending ...")
+        data = f.read(buf)
+s.sendto('EOF'.encode(),addr) # this indicates the end of the file to the client
+
+print("finished")
+
+f.close()
+s.close()
