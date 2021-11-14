@@ -3,4 +3,4 @@ Infracom chat project using [python's socket library](https://docs.python.org/3/
 
 ## Usage
 
-This first version works by first running `python UDPServer.py` then running `python UDPClient.py`. The server code will create a server instance which receives messages in lowercase and returns them in uppercase. The client code will estabilish a connection via a socket to the server, ask you for a message in lowercase and after that it'll receive the same message but in uppercase letters. The files are already configured to use the **__localhost__** as the hostname so you can run it on your own machine to test it out.
+This first version works by first running `python UDPServer.py` then running `python UDPClient.py <file_to_be_Sent>`. The server will receive the file sent by the client and will also send the the file back to the client renamed. Everything is set up to use the **__localhost__** as the hostname so you can run it on your own machine to test it out.
