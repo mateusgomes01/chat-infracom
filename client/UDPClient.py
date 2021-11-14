@@ -33,7 +33,7 @@ f = open(filename.decode(),'wb') # creates new file with file name received from
 
 # starts receiving new file contents sent by the server
 data,addr = s.recvfrom(buf)
-while(str(data.decode()) != 'EOF'):
+while(data != 'EOF'.encode()):
     f.write(data)
     data,addr = s.recvfrom(buf)
 

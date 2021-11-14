@@ -21,7 +21,7 @@ f = open(filename,'w+b')
 data,addr = s.recvfrom(buf)
 
 # receives file contents
-while(data.decode() != 'EOF'):
+while(data != 'EOF'.encode()):
     f.write(data)
     data,addr = s.recvfrom(buf)
 
