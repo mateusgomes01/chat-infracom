@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from socket import *
-from parentdirectory import my_socket
+from my_socket import *
 import sys
 
 host = "0.0.0.0"
@@ -19,12 +19,6 @@ filename = data.decode()
 f = open(filename,'w+b')
 
 # receives file contents
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< func a
-# data,addr = s.recvfrom(buf)
-# while(data != 'EOF'.encode()):
-#     f.write(data)
-#     data,addr = s.recvfrom(buf)
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> func a
 buffer_to_file(f, buf, addr, s)
 
 
@@ -36,14 +30,7 @@ print("sending file name...")
 f.seek(0) # moves pointer to beginning of file
 
 # sends file back to client with new name
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< func b
-data = f.read(buf)
-while(data):
-    if(s.sendto(data,addr)):
-        print("sending ...")
-        data = f.read(buf)
-s.sendto('EOF'.encode(),addr) # this indicates the end of the file to the client
-# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> func a
+file_to_buffer(f, buf, addr, s)
 
 print("finished")
 

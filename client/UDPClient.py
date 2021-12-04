@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from socket import *
-from ..my_socket import *
+from my_socket import *
 import sys
 
 host = "localhost"
@@ -19,14 +19,7 @@ s.sendto(filename.encode(),addr)
 print("sending file name...")
 
 # starts sending the file to the server
-# <<<<<<<<<<<<<<<<<<<<<<<< func b
-data = f.read(buf)
-while (data):
-    if(s.sendto(data,addr)):
-        print("sending ...")
-        data = f.read(buf)
-s.sendto('EOF'.encode(),addr) # this indicates the end of the file to the server
-# >>>>>>>>>>>>>>>>>>>>>>>> func b
+file_to_buffer(f, buf, addr, s)
 
 f.close()
 
@@ -35,13 +28,7 @@ filename,addr = s.recvfrom(buf)
 f = open(filename.decode(),'wb') # creates new file with file name received from server
 
 # starts receiving new file contents sent by the server
-# <<<<<<<<<<<<<<<<<<<<<<<< func a
-# data,addr = s.recvfrom(buf)
-# while(data != 'EOF'.encode()):
-#     f.write(data)
-#     data,addr = s.recvfrom(buf)
-# >>>>>>>>>>>>>>>>>>>>>>>> func a
-ms.buffer_to_file(f, buf, addr, s) 
+buffer_to_file(f, buf, addr, s) 
 
 print("finished")
 
