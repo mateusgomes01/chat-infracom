@@ -11,7 +11,7 @@ def buffer_to_file(file, buffer, address, socket):
     while data != 'EOF'.encode():
         file.write(data)
         data, address = socket.recvfrom(buffer)
-    print("finished receiving file");
+    print("finished receiving file")
 
 
 def file_to_buffer(file, buffer, address, socket):
@@ -33,12 +33,25 @@ def usernameIsValid(username):
 
 def messagesTreatment(client, buffer):
     username = client["username"]
-    client = client["sock"]
+    client = client["addr"]
     while True:
         try:
             data, address = socket.recvfrom(buffer)
             data = data.decode('utf-8')
-            broadcast(data, username)
+            if data == f'hi, meu nome eh {username}':
+                data = f'O {username} esta conectado!\n'
+                broadcast(data, username)
+            elif data == 'bye':
+                data = f'O {username} esta desconectado!\n'
+                broadcast(data, username)
+                deleteClient(client)
+                break
+            elif data == 'list':
+                for client in clients:
+                    socket.sendto(client["username"].encode('utf-8'), address)
+            else:
+                data = f'<{datetime.datetime.now().time()}><{username}>: <{data}'
+                broadcast(data, username)
         except:
             deleteClient(client)
 
@@ -47,7 +60,7 @@ def broadcast(message, username):
     for client in clients:
         if client["username"] != username:
             try:
-                socket.sendto(f'<{datetime.datetime.now().time()}><{username}><{message}'.encode('utf-8'), client["address"])
+                socket.sendto(f'<{message}'.encode('utf-8'), client["addr"])
             except:
                 deleteClient(client)
                 break
@@ -57,4 +70,3 @@ def deleteClient(client):
     clients.remove(client)
     msg = f'{client["username"]} disconnected!\n'
     broadcast(msg, "Server")
-

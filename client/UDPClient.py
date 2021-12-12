@@ -5,16 +5,16 @@ import threading
 from my_socket import *
 import sys
 
+
 host = "localhost"
 port = 9999
 buf = 1024
 s = socket(AF_INET, SOCK_DGRAM)
 addr = (host, port)
 
-
 username = input("Enter your name: ")
-socket.sendTo(username.encode('utf-8'), addr)
-response = socket.recvfrom(1048)
+s.sendto(username.encode('utf-8'), addr)
+response = s.recvfrom(1048)
 response = response.decode('utf-8')
 
 if response == 'Nome de usuário em uso':

@@ -4,6 +4,8 @@ import datetime
 from socket import *
 import sys
 
+from server.UDPServer import clients
+
 
 def buffer_to_file(file, buffer, address, socket):
     data, address = socket.recvfrom(buffer)
@@ -38,3 +40,9 @@ def send_message(address, username):
     while True:
         msg = input("\n")
         socket.sendto(f'<{username}> {msg}'.encode('utf-8'), address)
+
+def usernameIsValid(username):
+    for client in clients:
+        if username == client["username"]:
+            return False
+    return True

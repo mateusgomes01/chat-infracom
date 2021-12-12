@@ -11,8 +11,8 @@ host = "0.0.0.0"
 port = 9999
 buf = 1024
 s = socket(AF_INET, SOCK_DGRAM)
-s.bind(host, port)
 addr = (host, port)
+s.bind(addr)
 
 while True:
     username, addr = s.recvfrom(buf)
